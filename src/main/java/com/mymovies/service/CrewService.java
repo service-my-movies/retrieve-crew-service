@@ -26,6 +26,9 @@ public class CrewService implements ICrewService {
 	@Value("${resource.api.language}")
 	private String Language;
 
+	@Value("${service.url}")
+	private String serviceUrl;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrewService.class);
 	
 	@Autowired
@@ -34,9 +37,13 @@ public class CrewService implements ICrewService {
 	public ArrayList<CrewDTO> getAPI_Crew(String movie_id) {
 
 		CreditDTO credits = null;
+
+		String url = serviceUrl == "" ? BASE_URL+movie_id+"/credits"+API_KEY+Language : serviceUrl+movie_id;
+
+		LOGGER.info("@Get getAPI_Crew Service URL : " + url);
 		
 		try {
-			credits = restTemplate.getForObject(BASE_URL+movie_id+"/credits"+API_KEY+Language, CreditDTO.class);
+			credits = restTemplate.getForObject(url, CreditDTO.class);
 		} catch (Exception e) {
 			LOGGER.error("Unexpected Error From Service: getAPI_Crew: " + e);
 		}
